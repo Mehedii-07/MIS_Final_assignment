@@ -63,13 +63,19 @@ function displayCountries(countries) {
 }
 
 // Fetch weather data and display in grid
+// Fetch weather data and display in grid
 function getWeather(lat, lon, countryName) {
-    const weatherAPI = `https://api.open-meteo.com/v1/forecast?latitude=${lat}&longitude=${lon}&current_weather=true&humidity=true`;
+    const weatherAPI = `https://api.open-meteo.com/v1/forecast?latitude=${lat}&longitude=${lon}&current_weather=true`;
 
     fetch(weatherAPI)
         .then(response => response.json())
         .then(data => {
+            console.log("Weather API response:", data); // Debugging line to check the structure
+
             const weather = data.current_weather;
+
+            // Check if humidity is present, else display "N/A"
+            const humidity = weather.humidity !== undefined ? `${weather.humidity}%` : "N/A";
 
             const weatherCard = document.createElement("div");
             weatherCard.classList.add("col");
@@ -78,7 +84,7 @@ function getWeather(lat, lon, countryName) {
                 <div class="weather-card p-3 bg-light">
                     <h5 class="mb-3">Weather in ${countryName}</h5>
                     <p><strong>Temperature:</strong> ${weather.temperature}°C</p>
-                    <p><strong>Humidity:</strong> ${weather.humidity || "N/A"}%</p>
+                    <p><strong>Humidity:</strong> ${humidity}</p>
                     <p><strong>Wind Speed:</strong> ${weather.windspeed} km/h</p>
                     <p><strong>Condition Code:</strong> ${weather.weathercode || "N/A"}</p>
                 </div>

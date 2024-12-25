@@ -4,6 +4,10 @@ body {
     background-color: #f4f7fc;
     color: #333;
     margin: 0;
+    body {
+    font-family: 'Roboto', sans-serif;
+}
+
 }
 
 /* Navbar styling */
@@ -136,11 +140,15 @@ body {
 
 .weather-card {
     background-color: #fff;
-    padding: 20px;
+    padding: 30px;
     border-radius: 12px;
     box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
     text-align: center;
     transition: transform 0.3s ease;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    height: 250px; /* Adjust height to make space for content and button */
 }
 
 .weather-card:hover {
@@ -162,10 +170,11 @@ body {
     background-color: #e67e22;
     color: white;
     border-radius: 30px;
-    padding: 8px 20px;
+    padding: 10px 20px;
     font-size: 1rem;
-    margin-top: 10px;
+    margin-top: auto; /* Pushes the button to the bottom of the card */
     transition: background-color 0.3s ease;
+    align-self: center; /* Centers the button horizontally */
 }
 
 .weather-card button:hover {
@@ -201,4 +210,13 @@ footer p {
     .input-group {
         width: 90%;
     }
+}
+/* Smooth hover effect on buttons */
+.btn-primary, .weather-card button {
+    transition: transform 0.3s ease, background-color 0.3s ease;
+}
+
+.btn-primary:hover, .weather-card button:hover {
+    transform: scale(1.05);  /* Slightly enlarge the button */
+    background-color: #e67e22;  /* Change color on hover */
 }

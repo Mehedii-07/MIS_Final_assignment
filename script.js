@@ -1,7 +1,10 @@
 const countryGrid = document.getElementById("countryGrid");
 const weatherGrid = document.getElementById("weatherGrid");
 const searchBox = document.getElementById("searchBox");
+
+
 const searchButton = document.getElementById("searchButton");
+
 
 // Fetch and display country data
 searchButton.addEventListener("click", () => {

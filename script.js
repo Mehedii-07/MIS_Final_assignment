@@ -6,6 +6,7 @@ const searchBox = document.getElementById("searchBox");
 const searchButton = document.getElementById("searchButton");
 
 
+
 // Fetch and display country data
 searchButton.addEventListener("click", () => {
     const countryName = searchBox.value.trim();
@@ -15,6 +16,7 @@ searchButton.addEventListener("click", () => {
         alert("Please enter a country name!");
         return;
     }
+    
 
     const countryAPI = `https://restcountries.com/v3.1/name/${countryName}`;
     fetch(countryAPI)

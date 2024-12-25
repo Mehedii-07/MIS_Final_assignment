@@ -220,3 +220,50 @@ footer p {
     transform: scale(1.05);  /* Slightly enlarge the button */
     background-color: #e67e22;  /* Change color on hover */
 }
+.country-card {
+    background-color: #f8f9fa; /* Light gray for card background */
+    border-radius: 10px; /* Rounded corners */
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Subtle shadow */
+    padding: 20px; /* Spacing inside the card */
+    text-align: center; /* Center-align text */
+    transition: transform 0.3s, box-shadow 0.3s; /* Animation for hover effect */
+}
+
+.country-card:hover {
+    transform: scale(1.05); /* Slight zoom-in effect on hover */
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2); /* Enhance shadow on hover */
+}
+
+.country-card img {
+    width: 100%; /* Make flag image responsive */
+    height: auto;
+    border-radius: 5px; /* Slight rounding for flag corners */
+    margin-bottom: 15px; /* Space between flag and text */
+}
+
+.country-card h5 {
+    color: #007bff; /* Bright blue for country name */
+    font-size: 1.25rem; /* Larger font for title */
+    font-weight: bold;
+}
+
+.country-card p {
+    color: #6c757d; /* Gray for text */
+    font-size: 0.95rem; /* Slightly smaller font */
+    margin: 5px 0; /* Space between lines */
+}
+
+.country-card button {
+    background-color: #007bff; /* Bright blue for button */
+    color: #fff; /* White text on button */
+    border: none; /* Remove border */
+    border-radius: 5px; /* Rounded button */
+    padding: 10px 15px; /* Button size */
+    font-size: 0.9rem; /* Button font size */
+    transition: background-color 0.3s; /* Smooth color change */
+}
+
+.country-card button:hover {
+    background-color: #0056b3; /* Darker blue on hover */
+    cursor: pointer; /* Pointer cursor on hover */
+}

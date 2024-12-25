@@ -1,71 +1,82 @@
-const countryContainer = document.getElementById('countryContainer');
+const countryGrid = document.getElementById("countryGrid");
+const weatherGrid = document.getElementById("weatherGrid");
+const searchBox = document.getElementById("searchBox");
+const searchButton = document.getElementById("searchButton");
 
-async function fetchCountryData() {
-  const countryName = document.getElementById('countryInput').value.trim();
-  if (!countryName) {
-    alert('Please enter a country name!');
-    return;
-  }
+// Fetch and display country data
+searchButton.addEventListener("click", () => {
+    const countryName = searchBox.value.trim();
+    searchBox.value = "";
 
-  try {
-    // Fetch country data
-    const countryResponse = await fetch(`https://restcountries.com/v3.1/name/${countryName}`);
-    if (!countryResponse.ok) {
-      throw new Error('Country not found');
+    if (!countryName) {
+        alert("Please enter a country name!");
+        return;
     }
-    const countryData = await countryResponse.json();
-    displayCountryData(countryData);
-  } catch (error) {
-    alert(error.message);
-  }
+
+    const countryAPI = `https://restcountries.com/v3.1/name/${countryName}`;
+    fetch(countryAPI)
+        .then(response => response.json())
+        .then(data => {
+            if (!data || data.status === 404) {
+                alert("Country not found!");
+                return;
+            }
+            displayCountries(data);
+        })
+        .catch(error => console.error("Error fetching country data:", error));
+});
+
+// Display country cards
+function displayCountries(countries) {
+    countryGrid.innerHTML = "";
+    weatherGrid.innerHTML = "";
+
+    countries.forEach(country => {
+        const card = document.createElement("div");
+        card.classList.add("col");
+
+        card.innerHTML = `
+            <div class="country-card">
+                <img src="${country.flags.png}" alt="${country.name.common}" class="img-fluid mb-3">
+                <h5>${country.name.common}</h5>
+                <p><strong>Population:</strong> ${country.population.toLocaleString()}</p>
+                <p><strong>Capital:</strong> ${country.capital ? country.capital[0] : "N/A"}</p>
+                <p><strong>Currency:</strong> ${
+                    Object.values(country.currencies)[0]?.name || "N/A"
+                } (${Object.values(country.currencies)[0]?.symbol || "N/A"})</p>
+                <button class="btn btn-primary mt-3" onclick="getWeather('${country.latlng[0]}', '${country.latlng[1]}', '${country.name.common}')">View Weather</button>
+            </div>
+        `;
+
+        countryGrid.appendChild(card);
+    });
 }
 
-function displayCountryData(data) {
-  countryContainer.innerHTML = '';
-  data.forEach(country => {
-    const countryCard = document.createElement('div');
-    countryCard.classList.add('col-md-4', 'col-sm-6');
+// Fetch weather data and display in grid
+function getWeather(lat, lon, countryName) {
+    const weatherAPI = `https://api.open-meteo.com/v1/forecast?latitude=${lat}&longitude=${lon}&current_weather=true`;
 
-    // Currency handling
-    const currency = Object.values(country.currencies)[0];
-    const currencyName = currency?.name || 'N/A';
-    const currencySymbol = currency?.symbol || 'N/A';
+    fetch(weatherAPI)
+        .then(response => response.json())
+        .then(data => {
+            const weather = data.current_weather;
 
-    // Country card template
-    countryCard.innerHTML = `
-      <div class="card">
-        <img src="${country.flags.svg}" class="card-img-top" alt="Flag of ${country.name.common}">
-        <div class="card-body">
-          <h5 class="card-title">${country.name.common}</h5>
-          <p class="card-text">
-            <strong>Currency:</strong> ${currencyName} (${currencySymbol})
-          </p>
-          <button class="btn btn-primary" onclick="fetchWeatherData('${country.capital[0]}', '${country.name.common}')">View Weather</button>
-        </div>
-      </div>
-    `;
+            const weatherCard = document.createElement("div");
+            weatherCard.classList.add("col");
 
-    countryContainer.appendChild(countryCard);
-  });
-}
+            weatherCard.innerHTML = `
+                <div class="weather-card">
+                    <h5>Weather in ${countryName}</h5>
+                    <p><strong>Temperature:</strong> ${weather.temperature}°C</p>
+                    <p><strong>Wind Speed:</strong> ${weather.windspeed} km/h</p>
+                    <p><strong>Condition Code:</strong> ${weather.weathercode || "N/A"}</p>
+                </div>
+            `;
 
-async function fetchWeatherData(capital, countryName) {
-  try {
-    const apiKey = 'YOUR_API_KEY'; // Replace with a valid weather API key
-    const weatherResponse = await fetch(
-      `https://api.openweathermap.org/data/2.5/weather?q=${capital}&units=metric&appid=${apiKey}`
-    );
-    if (!weatherResponse.ok) {
-      throw new Error('Weather data not found');
-    }
-    const weatherData = await weatherResponse.json();
-
-    // Display weather data
-    alert(`Weather in ${capital}, ${countryName}:
-    - Temperature: ${weatherData.main.temp}°C
-    - Description: ${weatherData.weather[0].description}
-    - Humidity: ${weatherData.main.humidity}%`);
-  } catch (error) {
-    alert(error.message);
-  }
+            weatherGrid.appendChild(weatherCard);
+        })
+        .catch(error => {
+            console.error("Error fetching weather data:", error);
+            alert("Unable to fetch weather data. Please try again later.");
+        });
 }

@@ -1,14 +1,10 @@
 const countryGrid = document.getElementById("countryGrid");
 const weatherGrid = document.getElementById("weatherGrid");
 const searchBox = document.getElementById("searchBox");
-
-
 const searchButton = document.getElementById("searchButton");
 
-
-
-// Fetch and display country data
-searchButton.addEventListener("click", () => {
+// Function to perform the search
+function performSearch() {
     const countryName = searchBox.value.trim();
     searchBox.value = "";
 
@@ -16,7 +12,6 @@ searchButton.addEventListener("click", () => {
         alert("Please enter a country name!");
         return;
     }
-    
 
     const countryAPI = `https://restcountries.com/v3.1/name/${countryName}`;
     fetch(countryAPI)
@@ -29,6 +24,16 @@ searchButton.addEventListener("click", () => {
             displayCountries(data);
         })
         .catch(error => console.error("Error fetching country data:", error));
+}
+
+// Add click event to the search button
+searchButton.addEventListener("click", performSearch);
+
+// Add "Enter" key event listener to the search box
+searchBox.addEventListener("keypress", (event) => {
+    if (event.key === "Enter") {
+        performSearch();
+    }
 });
 
 // Display country cards
@@ -59,7 +64,7 @@ function displayCountries(countries) {
 
 // Fetch weather data and display in grid
 function getWeather(lat, lon, countryName) {
-    const weatherAPI = `https://api.open-meteo.com/v1/forecast?latitude=${lat}&longitude=${lon}&current_weather=true`;
+    const weatherAPI = `https://api.open-meteo.com/v1/forecast?latitude=${lat}&longitude=${lon}&current_weather=true&humidity=true`;
 
     fetch(weatherAPI)
         .then(response => response.json())
@@ -70,9 +75,10 @@ function getWeather(lat, lon, countryName) {
             weatherCard.classList.add("col");
 
             weatherCard.innerHTML = `
-                <div class="weather-card">
-                    <h5>Weather in ${countryName}</h5>
+                <div class="weather-card p-3 bg-light">
+                    <h5 class="mb-3">Weather in ${countryName}</h5>
                     <p><strong>Temperature:</strong> ${weather.temperature}°C</p>
+                    <p><strong>Humidity:</strong> ${weather.humidity || "N/A"}%</p>
                     <p><strong>Wind Speed:</strong> ${weather.windspeed} km/h</p>
                     <p><strong>Condition Code:</strong> ${weather.weathercode || "N/A"}</p>
                 </div>
